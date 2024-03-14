@@ -14,22 +14,14 @@ package ci583.receiver;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
 public class MLFQReceiver extends ModRegReceiver {
-
-    private ArrayList<ModuleRegister> young;
-    private ArrayList<ModuleRegister> old;
     /**
      * Constructs a multi-level feedback queue receiver. The constructor needs to call the constructor of the
      * superclass then initialise the two lists for young and old processes.
      * @param quantum
      */
     public MLFQReceiver(long quantum) {
-      super(quantum);
-        young = new ArrayList<>();
-        old = new ArrayList<>();
+        super(quantum);
     }
 
     /**
@@ -38,8 +30,7 @@ public class MLFQReceiver extends ModRegReceiver {
      */
     @Override
     public void enqueue(ModuleRegister m) {
-          young.add(m);
-
+        throw new UnsupportedOperationException("Method not implemented");
     }
 
     /**
@@ -65,12 +56,5 @@ public class MLFQReceiver extends ModRegReceiver {
         throw new UnsupportedOperationException("Method not implemented");
         //ArrayList<ModuleRegister> results = new ArrayList<>();
         //return results;
-
     }
-
-
-    }
-
-
-
-
+}
