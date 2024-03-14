@@ -79,17 +79,16 @@ public class ModuleRegister extends Thread {
      * @returns status of the process
      */
     public String getStatus() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return status;
     }
-    //return status;
+
 
     /**
      * The length of time, in milliseconds, that this process has been working.
      * @return
      */
     private long workDone() {
-      throw new UnsupportedOperationException("Method not implemented");
-      //return System.currentTimeMillis() - timeStarted;
+        return System.currentTimeMillis() - timeStarted;
     }
 
     /**

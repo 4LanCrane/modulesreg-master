@@ -12,6 +12,7 @@ import java.util.List;
 
 public class RRReceiver extends ModRegReceiver {
 
+    private ArrayList<ModuleRegister> queue = new ArrayList<>();
     /**
      * Create a new RRReceiver with the given quantum. The constructor needs to call the constructor
      * of the superclass, then initialise the list of processes.
@@ -19,6 +20,7 @@ public class RRReceiver extends ModRegReceiver {
      */
     public RRReceiver(long quantum) {
       super(quantum);
+      queue = new ArrayList<>();
     }
 
     /**
@@ -26,7 +28,7 @@ public class RRReceiver extends ModRegReceiver {
      */
     @Override
     public void enqueue(ModuleRegister m) {
-      throw new UnsupportedOperationException("Method not implemented");
+        queue.add(m);
     }
 
     /**
@@ -45,8 +47,33 @@ public class RRReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        throw new UnsupportedOperationException("Method not implemented");
-        //ArrayList<ModuleRegister> results = new ArrayList<>();
-        //return results;
+        ArrayList<ModuleRegister> results = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            ModuleRegister m = queue.remove(0);
+            switch (m.getState()) {
+                case NEW:
+                    m.start();
+                    try {
+                        Thread.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    queue.add(m);
+                    break;
+                case TERMINATED:
+                    results.add(m);
+                    break;
+                default:
+                    m.interrupt();
+                    try {
+                        Thread.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    queue.add(m);
+                    break;
+            }
+        }
+        return results;
     }
 }

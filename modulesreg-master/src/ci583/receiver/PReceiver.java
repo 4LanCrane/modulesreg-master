@@ -9,9 +9,13 @@ package ci583.receiver;
  * @author Jim Burton
  */
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class PReceiver extends ModRegReceiver {
+
+    private PriorityQueue<ModuleRegister> queue;
 
     /**
      * Constructs a new Priority Scheduler. The constructor needs to call the constructor of the
@@ -23,32 +27,68 @@ public class PReceiver extends ModRegReceiver {
      * @param quantum
      */
     public PReceiver(long quantum) {
-      super(quantum);
+        super(quantum);
+        queue = new PriorityQueue<>((p1, p2) -> {
+            if (p1.getPriority() == p2.getPriority()) {
+                return -1;
+            } else if (p1.getPriority() < p2.getPriority()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+
     }
+
 
     @Override
     public void enqueue( ModuleRegister m) {
-        throw new UnsupportedOperationException("Method not implemented");
+        queue.add(m);
     }
 
     /**
      * Schedule the processes. This method needs to:
      * + create an empty list which will hold the completed processes. This will be the
-     *   return value of the method.
+     * return value of the method.
      * + while the queue is not empty:
-     *   - use the priority queue's `poll' method to take the next process from the queue and get its State.
-     *   - if the state is NEW, start the process then sleep for QUANTUM milliseconds
-     *     then put the process at the back of the queue.
-     *   - if the state is TERMINATED, add it to the results list.
-     *   - if the state is anything else then interrupt the process to wake it up then
-     *     sleep for QUANTUM milliseconds, then put the process at the back of the queue.
-     *  + when the queue is empty, return the list of completed processes.
+     * - use the priority queue's `poll' method to take the next process from the queue and get its State.
+     * - if the state is NEW, start the process then sleep for QUANTUM milliseconds
+     * then put the process at the back of the queue.
+     * - if the state is TERMINATED, add it to the results list.
+     * - if the state is anything else then interrupt the process to wake it up then
+     * sleep for QUANTUM milliseconds, then put the process at the back of the queue.
+     * + when the queue is empty, return the list of completed processes.
+     *
      * @return
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        throw new UnsupportedOperationException("Method not implemented");
-        //ArrayList<ModuleRegister>orderedResults = new ArrayList<>();
-        //return orderedResults;
+        List<ModuleRegister> results = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            ModuleRegister m = queue.poll();
+            switch (m.getState()) {
+                case NEW:
+                    m.start();
+                    try {
+                        Thread.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    queue.add(m);
+                    break;
+                case TERMINATED:
+                    results.add(m);
+                    break;
+                default:
+                    m.interrupt();
+                    try {
+                        Thread.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    queue.add(m);
+            }
+        }
+        return results;
     }
 }
