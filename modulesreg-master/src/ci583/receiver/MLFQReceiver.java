@@ -35,7 +35,7 @@ public class MLFQReceiver extends ModRegReceiver {
      */
     @Override
     public void enqueue(ModuleRegister m) {
-        throw new UnsupportedOperationException("Method not implemented");
+        young.add(m);
     }
 
     /**
@@ -58,8 +58,57 @@ public class MLFQReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        throw new UnsupportedOperationException("Method not implemented");
-        //ArrayList<ModuleRegister> results = new ArrayList<>();
-        //return results;
+        ArrayList<ModuleRegister> results = new ArrayList<>();
+
+      while (!young.isEmpty() || !old.isEmpty()){
+          if (!young.isEmpty()){
+              ModuleRegister m = young.remove(0);
+
+              if(m.getState() == Thread.State.NEW){
+                  m.start();
+                  try {
+                      m.sleep(QUANTUM);
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+                  old.add(m);
+              } else if (m.getState() == Thread.State.TERMINATED){
+                  results.add(m);
+              } else {
+                  m.interrupt();
+                  try {
+                      m.sleep(QUANTUM);
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+                  old.add(m);
+              }
+          }
+            if (!old.isEmpty()){
+                ModuleRegister m = old.remove(0);
+
+                if(m.getState() == Thread.State.NEW){
+                    m.start();
+                    try {
+                        m.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    young.add(m);
+                } else if (m.getState() == Thread.State.TERMINATED){
+                    results.add(m);
+                } else {
+                    m.interrupt();
+                    try {
+                        m.sleep(QUANTUM);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    young.add(m);
+                }
+            }
+      }
+
+        return results;
     }
 }
