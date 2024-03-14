@@ -9,13 +9,12 @@ package ci583.receiver;
  * @author Jim Burton
  */
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class PReceiver extends ModRegReceiver {
 
-    private PriorityQueue<ModuleRegister> queue;
+    private PriorityQueue<ModuleRegister> queue;// the priority queue
 
     /**
      * Constructs a new Priority Scheduler. The constructor needs to call the constructor of the
@@ -28,8 +27,8 @@ public class PReceiver extends ModRegReceiver {
      */
     public PReceiver(long quantum) {
         super(quantum);
-        queue = new PriorityQueue<>((p1, p2) -> {
-            if (p1.getPriority() == p2.getPriority()) {
+        queue = new PriorityQueue<>((p1, p2) -> { //initialise the priority queue
+            if (p1.getPriority() == p2.getPriority()) { //define a Comparator that compares two processes
                 return -1;
             } else if (p1.getPriority() < p2.getPriority()) {
                 return -1;
@@ -37,7 +36,6 @@ public class PReceiver extends ModRegReceiver {
                 return 1;
             }
         });
-
     }
 
 
@@ -63,32 +61,32 @@ public class PReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        List<ModuleRegister> results = new ArrayList<>();
+        List<ModuleRegister> results = new ArrayList<>();// create an empty list which will hold the completed processes
         while (!queue.isEmpty()) {
-            ModuleRegister m = queue.poll();
+            ModuleRegister m = queue.poll();// take the next process
             switch (m.getState()) {
                 case NEW:
-                    m.start();
+                    m.start();// start the process
                     try {
                         Thread.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m);
+                    queue.add(m);// put it at the back of the queue
                     break;
                 case TERMINATED:
-                    results.add(m);
+                    results.add(m);// add it to the results
                     break;
                 default:
-                    m.interrupt();
+                    m.interrupt();// wake it up
                     try {
-                        Thread.sleep(QUANTUM);
+                        Thread.sleep(QUANTUM);// sleep for QUANTUM milliseconds
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m);
+                    queue.add(m); // put it at the back of the queue
             }
         }
-        return results;
+        return results;// return the list of completed processes
     }
 }

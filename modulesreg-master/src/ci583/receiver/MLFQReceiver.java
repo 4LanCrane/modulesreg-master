@@ -20,8 +20,13 @@ public class MLFQReceiver extends ModRegReceiver {
      * superclass then initialise the two lists for young and old processes.
      * @param quantum
      */
+
+    List <ModuleRegister> young;
+    List <ModuleRegister> old;
     public MLFQReceiver(long quantum) {
         super(quantum);
+        young = new ArrayList<>();
+        old = new ArrayList<>();
     }
 
     /**

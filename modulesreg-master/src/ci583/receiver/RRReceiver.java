@@ -12,15 +12,15 @@ import java.util.List;
 
 public class RRReceiver extends ModRegReceiver {
 
-    private ArrayList<ModuleRegister> queue = new ArrayList<>();
+    private ArrayList<ModuleRegister> queue; // the list of processes
     /**
      * Create a new RRReceiver with the given quantum. The constructor needs to call the constructor
      * of the superclass, then initialise the list of processes.
      * @param quantum amount of time to run RRReceiver
      */
     public RRReceiver(long quantum) {
-      super(quantum);
-      queue = new ArrayList<>();
+      super(quantum); // call the constructor of the superclass
+      queue = new ArrayList<>(); // initialise the list of processes
     }
 
     /**
@@ -47,30 +47,30 @@ public class RRReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        ArrayList<ModuleRegister> results = new ArrayList<>();
+        ArrayList<ModuleRegister> results = new ArrayList<>(); // create an empty list which will hold the completed processes
         while (!queue.isEmpty()) {
             ModuleRegister m = queue.remove(0);
-            switch (m.getState()) {
+            switch (m.getState()) {// take the next process from the queue and get its State
                 case NEW:
-                    m.start();
+                    m.start(); // start the process
                     try {
-                        Thread.sleep(QUANTUM);
+                        m.sleep(QUANTUM); // then sleep for QUANTUM milliseconds
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m);
+                    queue.add(m); // then put the process at the back of the queue
                     break;
                 case TERMINATED:
-                    results.add(m);
+                    results.add(m); // add it to the results
                     break;
                 default:
-                    m.interrupt();
+                    m.interrupt(); // wake it up
                     try {
-                        Thread.sleep(QUANTUM);
+                        m.sleep(QUANTUM); // sleep for QUANTUM milliseconds
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m);
+                    queue.add(m); // put it at the back of the queue
                     break;
             }
         }
