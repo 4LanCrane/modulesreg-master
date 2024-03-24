@@ -64,7 +64,7 @@ public class MLFQReceiver extends ModRegReceiver {
           if (!young.isEmpty()){
               ModuleRegister m = young.remove(0);
 
-              if(m.getState() == Thread.State.NEW){
+              if(m.getState() == ModuleRegister.State.NEW){
                   m.start();
                   try {
                       m.sleep(QUANTUM);
@@ -72,7 +72,7 @@ public class MLFQReceiver extends ModRegReceiver {
                       e.printStackTrace();
                   }
                   old.add(m);
-              } else if (m.getState() == Thread.State.TERMINATED){
+              } else if (m.getState() == ModuleRegister.State.TERMINATED){
                   results.add(m);
               } else {
                   m.interrupt();
@@ -95,7 +95,7 @@ public class MLFQReceiver extends ModRegReceiver {
                         e.printStackTrace();
                     }
                     young.add(m);
-                } else if (m.getState() == Thread.State.TERMINATED){
+                } else if (m.getState() == ModuleRegister.State.TERMINATED){
                     results.add(m);
                 } else {
                     m.interrupt();

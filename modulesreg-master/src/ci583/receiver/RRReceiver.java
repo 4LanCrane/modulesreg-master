@@ -7,12 +7,12 @@ package ci583.receiver;
  * @author Jim Burton
  */
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RRReceiver extends ModRegReceiver {
 
-    private ArrayList<ModuleRegister> queue; // the list of processes
+    private List<ModuleRegister> queue; // the list of processes
     /**
      * Create a new RRReceiver with the given quantum. The constructor needs to call the constructor
      * of the superclass, then initialise the list of processes.
@@ -20,7 +20,7 @@ public class RRReceiver extends ModRegReceiver {
      */
     public RRReceiver(long quantum) {
       super(quantum); // call the constructor of the superclass
-      queue = new ArrayList<>(); // initialise the list of processes
+      queue = new LinkedList<>(); // initialise the list of processes
     }
 
     /**
@@ -47,7 +47,7 @@ public class RRReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        ArrayList<ModuleRegister> results = new ArrayList<>(); // create an empty list which will hold the completed processes
+        LinkedList<ModuleRegister> results = new LinkedList<>(); // create an empty list which will hold the completed processes
         while (!queue.isEmpty()) {
             ModuleRegister m = queue.remove(0);
             switch (m.getState()) {// take the next process from the queue and get its State
