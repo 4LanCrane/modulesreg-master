@@ -33,10 +33,10 @@ public class PReceiver extends ModRegReceiver implements Comparator<ModuleRegist
 
 
     @Override
-    public int compare(ModuleRegister o1, ModuleRegister o2) {
-        if (o1.getPriority() == o2.getPriority()) {
+    public int compare(ModuleRegister m1, ModuleRegister m2) {
+        if (m1.getPriority() == m2.getPriority()) {
             return -1;
-        }else if (o1.getPriority() < o2.getPriority()) {
+        }else if (m1.getPriority() < m2.getPriority()) {
             return -1;
         }else {
             return 1;
