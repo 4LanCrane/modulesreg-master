@@ -87,7 +87,7 @@ public class MLFQReceiver extends ModRegReceiver {
             if (!old.isEmpty()){
                 ModuleRegister m = old.remove(0);
 
-                if(m.getState() == Thread.State.NEW){
+                if(m.getState() == ModuleRegister.State.NEW){
                     m.start();
                     try {
                         m.sleep(QUANTUM);

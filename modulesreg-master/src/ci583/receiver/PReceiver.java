@@ -9,10 +9,11 @@ package ci583.receiver;
  * @author Jim Burton
  */
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class PReceiver extends ModRegReceiver {
+public class PReceiver extends ModRegReceiver implements Comparator<ModuleRegister> {
 
     private PriorityQueue<ModuleRegister> queue;// the priority queue
 
@@ -27,16 +28,22 @@ public class PReceiver extends ModRegReceiver {
      */
     public PReceiver(long quantum) {
         super(quantum);
-        queue = new PriorityQueue<>((p1, p2) -> { //initialise the priority queue
-            if (p1.getPriority() == p2.getPriority()) { //define a Comparator that compares two processes
-                return -1;
-            } else if (p1.getPriority() < p2.getPriority()) {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
+        queue = new PriorityQueue<>(this);
     }
+
+
+    @Override
+    public int compare(ModuleRegister o1, ModuleRegister o2) {
+        if (o1.getPriority() == o2.getPriority()) {
+            return -1;
+        }else if (o1.getPriority() < o2.getPriority()) {
+            return -1;
+        }else {
+            return 1;
+        }
+
+    }
+
 
 
     @Override
@@ -61,12 +68,12 @@ public class PReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        List<ModuleRegister> results = new ArrayList<>();// create an empty list which will hold the completed processes
+        List<ModuleRegister> results = new ArrayList<>();
         while (!queue.isEmpty()) {
-            ModuleRegister m = queue.poll();// take the next process
+            ModuleRegister m = queue.poll();
             switch (m.getState()) {
                 case NEW:
-                    m.start();// start the process
+                    m.start();
                     try {
                         Thread.sleep(QUANTUM);
                     } catch (InterruptedException e) {
@@ -75,12 +82,12 @@ public class PReceiver extends ModRegReceiver {
                     queue.add(m);// put it at the back of the queue
                     break;
                 case TERMINATED:
-                    results.add(m);// add it to the results
+                    results.add(m);
                     break;
                 default:
                     m.interrupt();// wake it up
                     try {
-                        Thread.sleep(QUANTUM);// sleep for QUANTUM milliseconds
+                        Thread.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -89,4 +96,7 @@ public class PReceiver extends ModRegReceiver {
         }
         return results;// return the list of completed processes
     }
+
+
+
 }

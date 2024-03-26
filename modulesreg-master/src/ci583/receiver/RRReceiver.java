@@ -7,12 +7,13 @@ package ci583.receiver;
  * @author Jim Burton
  */
 
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class RRReceiver extends ModRegReceiver {
 
-    private List<ModuleRegister> queue; // the list of processes
+    private LinkedList<ModuleRegister> queue; // the list of processes
     /**
      * Create a new RRReceiver with the given quantum. The constructor needs to call the constructor
      * of the superclass, then initialise the list of processes.
