@@ -62,7 +62,7 @@ public class RRReceiver extends ModRegReceiver {
                     queue.add(m); // then put the process at the back of the queue
                     break;
                 case TERMINATED:
-                    results.add(m); // add it to the results
+                    results.add(m); // if the state is terminated then add it to the results
                     break;
                 default:
                     m.interrupt(); // wake it up
