@@ -75,7 +75,7 @@ public class PReceiver extends ModRegReceiver implements Comparator<ModuleRegist
                 case NEW:
                     m.start();
                     try {
-                        Thread.sleep(QUANTUM);
+                        m.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -87,7 +87,7 @@ public class PReceiver extends ModRegReceiver implements Comparator<ModuleRegist
                 default:
                     m.interrupt();// wake it up
                     try {
-                        Thread.sleep(QUANTUM);
+                        m.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
