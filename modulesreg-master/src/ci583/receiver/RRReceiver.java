@@ -48,30 +48,30 @@ public class RRReceiver extends ModRegReceiver {
      */
     @Override
     public List<ModuleRegister> startRegistration() {
-        LinkedList<ModuleRegister> results = new LinkedList<>(); // create an empty list which will hold the completed processes
+        LinkedList<ModuleRegister> results = new LinkedList<>();
         while (!queue.isEmpty()) {
             ModuleRegister m = queue.remove(0);
-            switch (m.getState()) {// take the next process from the queue and get its State
+            switch (m.getState()) {
                 case NEW:
-                    m.start(); // start the process
+                    m.start();
                     try {
-                        m.sleep(QUANTUM); // then sleep for QUANTUM milliseconds
+                        m.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m); // then put the process at the back of the queue
+                    queue.add(m);
                     break;
                 case TERMINATED:
-                    results.add(m); // if the state is terminated then add it to the results
+                    results.add(m);
                     break;
                 default:
-                    m.interrupt(); // wake it up
+                    m.interrupt();
                     try {
-                        m.sleep(QUANTUM); // sleep for QUANTUM milliseconds
+                        m.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m); // put it at the back of the queue
+                    queue.add(m);
                     break;
             }
         }

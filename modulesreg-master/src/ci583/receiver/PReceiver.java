@@ -79,22 +79,22 @@ public class PReceiver extends ModRegReceiver implements Comparator<ModuleRegist
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m);// put it at the back of the queue
+                    queue.add(m);
                     break;
                 case TERMINATED:
                     results.add(m);
                     break;
                 default:
-                    m.interrupt();// wake it up
+                    m.interrupt();
                     try {
                         m.sleep(QUANTUM);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    queue.add(m); // put it at the back of the queue
+                    queue.add(m);
             }
         }
-        return results;// return the list of completed processes
+        return results;
     }
 
 
