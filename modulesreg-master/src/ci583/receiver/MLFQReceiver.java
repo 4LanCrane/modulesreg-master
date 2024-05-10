@@ -60,7 +60,7 @@ public class MLFQReceiver extends ModRegReceiver {
     // THIS METHOD WILL FAIL ON MAC OS  !!!!!!!!
     // THIS METHOD WILL FAIL ON MAC OS  !!!!!!!!
     // HAVE TESTED ON MULTIPLE WINDOWS MACHINES AND IT WORKS AND PASSES THE TESTS !!
-    // ISSUE WITH TEST RANDOMLY FAILING AFTER RUNNING MULTIPLE TIMES ON WINDOWS MACHINES !!
+    // BUT THERE IS AN ISSUE WITH TEST RANDOMLY FAILING AFTER RUNNING MULTIPLE TIMES ON WINDOWS MACHINES TOO !!
     @Override
     public List<ModuleRegister> startRegistration() {
         ArrayList<ModuleRegister> results = new ArrayList<>();
